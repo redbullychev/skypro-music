@@ -1,95 +1,60 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Track from "@/components/Track/Track";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import Nav from "@/components/Nav/Nav";
+import Player from "@/components/Player/Player";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className="wrapper">
+      <div className="container">
+        <main className="main">
+          <Nav />
+          <div className="main__centerblock centerblock">
+            <div className="centerblock__search search">
+              <svg className="search__svg">
+                <use xlinkHref="img/icon/sprite.svg#icon-search" />
+              </svg>
+              <input
+                className="search__text"
+                type="search"
+                placeholder="Поиск"
+                name="search"
+              />
+            </div>
+            <h2 className="centerblock__h2">Треки</h2>
+            <div className="centerblock__filter filter">
+              <div className="filter__title">Искать по:</div>
+              <div className="filter__button button-author _btn-text">
+                исполнителю
+              </div>
+              <div className="filter__button button-year _btn-text">
+                году выпуска
+              </div>
+              <div className="filter__button button-genre _btn-text">жанру</div>
+            </div>
+            <div className="centerblock__content playlist-content">
+              <div className="content__title playlist-title">
+                <div className="playlist-title__col col01">Трек</div>
+                <div className="playlist-title__col col02">Исполнитель</div>
+                <div className="playlist-title__col col03">Альбом</div>
+                <div className="playlist-title__col col04">
+                  <svg className="playlist-title__svg">
+                    <use xlinkHref="img/icon/sprite.svg#icon-watch" />
+                  </svg>
+                </div>
+              </div>
+              <div className="content__playlist playlist">
+                <Track />
+              </div>
+            </div>
+          </div>
+          <Sidebar />
+        </main>
+        <Player />
+        <footer className="footer" />
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
