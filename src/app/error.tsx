@@ -4,8 +4,12 @@ import { useEffect } from 'react';
 import styles from "./error.module.css";
 import Image from "next/image";
 
+type ErrorType = {
+  error: Error;
+  reset: () => void;
+};
 
-export default function Error({ error, reset }: any) {
+export default function Error({ error, reset }: ErrorType) {
   useEffect(() => {
     // Логирование ошибки
     console.error(error);
