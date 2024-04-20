@@ -10,7 +10,7 @@ type VolumeBarType = {
 export default function VolumeBar({ volume, step, onChange }: VolumeBarType) {
   return (
     <input
-      className={styles.styledVolumeInput} // Применение стилей к ползунку
+      className={styles.styledProgressInput} // Применение стилей к ползунку
       type="range" // Тип элемента - ползунок
       min="0" // Минимальное значение ползунка
       max="1" // Максимальное значение, зависит от длительности аудио
