@@ -1,30 +1,27 @@
+
 import { getTracks } from "@/api/tracks";
 import Track from "../Track/Track";
 import styles from "./Playlist.module.css";
 import classNames from "classnames";
 import { trackType } from "@/types";
-import { useEffect, useState } from "react";
 
-type PlaylistType = {
-  setTrack: (param: trackType) => void;
-  setIsPlaying: (param: boolean) => void;
-};
+export default async function Playlist() {
+  let tracksData: trackType[];
+  try {
+    tracksData = await getTracks();
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 
-export default function Playlist({ setTrack, setIsPlaying }: PlaylistType) {
-  // let tracksData: trackType[];
-  // try {
-  //   tracksData = await getTracks();
-  // } catch (error:any) {
-  //   throw new Error(error.message);
-  // }
-  const [tracksData, setTracksData] = useState<trackType[]>([]);
-  useEffect(() => {
-    getTracks()
-      .then((data: trackType[]) => setTracksData(data))
-      .catch((error: any) => {
-        throw new Error(error.message);
-      });
-  }, []);
+
+  // const [tracksData, setTracksData] = useState<trackType[]>([]);
+  // useEffect(() => {
+  //   getTracks()
+  //     .then((data: trackType[]) => setTracksData(data))
+  //     .catch((error: any) => {
+  //       throw new Error(error.message);
+  //     });
+  // }, []);
 
   return (
     <div className={styles.centerblockContent}>
@@ -45,17 +42,8 @@ export default function Playlist({ setTrack, setIsPlaying }: PlaylistType) {
         </div>
       </div>
       <div className={styles.contentPlaylist}>
-        {tracksData.map((trackData) => (
-          <Track
-            onClick={() => {
-              setTrack(trackData);
-              setIsPlaying(true);
-            }}
-            key={trackData.id}
-            name={trackData.name}
-            author={trackData.author}
-            album={trackData.album}
-          />
+        {tracksData.map((track) => (
+          <Track key={track.id} track={track} tracksData={tracksData} />
         ))}
       </div>
     </div>
