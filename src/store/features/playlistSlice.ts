@@ -1,5 +1,6 @@
 import { trackType } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { stat } from "fs";
 
 type PlaylistStateType = {
   currentTrack: null | trackType;
@@ -7,6 +8,14 @@ type PlaylistStateType = {
   shuffledPlaylist: trackType[];
   isShuffle: boolean;
   isPlaying: boolean;
+  filterOptions: {
+    author: string[];
+    searchValue: string;
+    order: string;
+    genre: string[];
+  };
+  filteredTracks: trackType[];
+  initialTracks: trackType[];
 };
 
 const initialState: PlaylistStateType = {
@@ -14,13 +23,28 @@ const initialState: PlaylistStateType = {
   playlist: [],
   shuffledPlaylist: [],
   isShuffle: false,
-  isPlaying: true
+  isPlaying: true,
+  filterOptions: {
+    author: [],
+    searchValue: "",
+    order: "По умолчанию",
+    genre: [],
+  },
+  filteredTracks: [],
+  initialTracks: [],
 };
 
 const playlistSlice = createSlice({
   name: "playlist",
   initialState,
   reducers: {
+    setInitialTracks: (
+      state,
+      action: PayloadAction<{ initialTracks: trackType[] }>
+    ) => {
+      state.initialTracks = action.payload.initialTracks;
+      state.filteredTracks = action.payload.initialTracks;
+    },
     toggleIsPlaying: (state, action: PayloadAction<boolean>) => {
       state.isPlaying = action.payload;
     },
@@ -64,9 +88,68 @@ const playlistSlice = createSlice({
     toggleShuffle: (state) => {
       state.isShuffle = !state.isShuffle;
     },
+    setFilters: (
+      state,
+      action: PayloadAction<{
+        author?: string[];
+        searchValue?: string;
+        order?: string;
+        genre?: string[];
+      }>
+    ) => {
+      state.filterOptions = {
+        author: action.payload.author || state.filterOptions.author,
+        searchValue:
+          action.payload.searchValue || state.filterOptions.searchValue,
+        order: action.payload.order || state.filterOptions.order,
+        genre: action.payload.genre || state.filterOptions.genre,
+      };
+      const arrFilters = state.initialTracks.filter((track) => {
+        const hasAuthors = state.filterOptions.author.length != 0;
+        const hasGenre = state.filterOptions.genre.length != 0;
+        const isGenre = hasGenre
+          ? state.filterOptions.genre.includes(track.genre)
+          : true;
+        const isAuthors = hasAuthors
+          ? state.filterOptions.author.includes(track.author)
+          : true;
+        const hasSearchValue = track.name
+          .toLowerCase()
+          .includes(state.filterOptions.searchValue?.toLowerCase());
+        return isAuthors && hasSearchValue && isGenre;
+      });
+      switch (state.filterOptions.order) {
+        case "Сначала новые":
+          arrFilters.sort(
+            (a, b) =>
+              new Date(b.release_date).getTime() -
+              new Date(a.release_date).getTime()
+          );
+          break;
+        case "Сначала старые":
+          arrFilters.sort(
+            (a, b) =>
+              new Date(a.release_date).getTime() -
+              new Date(b.release_date).getTime()
+          );
+          break;
+
+        default:
+          break;
+      }
+      state.filteredTracks = arrFilters;
+    },
   },
 });
 
-export const { setCurrentTrack, setNextTrack, setIsShuffle, setPrevtrack, toggleShuffle, toggleIsPlaying } =
-  playlistSlice.actions;
+export const {
+  setCurrentTrack,
+  setNextTrack,
+  setIsShuffle,
+  setPrevtrack,
+  toggleShuffle,
+  toggleIsPlaying,
+  setFilters,
+  setInitialTracks,
+} = playlistSlice.actions;
 export const playlistReducer = playlistSlice.reducer;
