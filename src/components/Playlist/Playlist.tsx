@@ -51,7 +51,7 @@ useEffect(() => {
       </div>
       <div className={styles.contentPlaylist}>
         {filteredTracks.map((track) => (
-          <Track key={track.id} track={track} tracksData={tracksData} />
+          <Track key={track.id} track={track} tracksData={tracks} />
         ))}
       </div>
     </div>

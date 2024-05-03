@@ -11,6 +11,7 @@ type FilterItemType = {
   handleFilterClick: (newFilter: string) => void;
   isOpened: boolean;
   tracksData: trackType[];
+  optionList?: string[];
 };
 
 export default function FilterItem({
@@ -19,10 +20,8 @@ export default function FilterItem({
   value,
   isOpened,
   tracksData,
+  optionList = [],
 }: FilterItemType) {
-  const authorsList = useAppSelector(
-    (state) => state.playlist.filterOptions.author
-  );
   const dispatch = useAppDispatch();
   const getFilterList = () => {
     if (value !== "order") {
@@ -35,11 +34,15 @@ export default function FilterItem({
   };
 
   const toggleFilter = (item: string) => {
+    if (value === "order") {
+      dispatch(setFilters({ order: item }));
+      return;
+    }
     dispatch(
       setFilters({
-        author: authorsList.includes(item)
-          ? authorsList.filter((el) => el !== item) 
-          : [...authorsList, item],
+        [value]: optionList.includes(item)
+          ? optionList.filter((el) => el !== item)
+          : [...optionList, item],
       })
     );
   };

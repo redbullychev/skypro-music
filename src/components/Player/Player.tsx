@@ -113,7 +113,7 @@ export default function Player() {
               {FormatSeconds(currentTime)} / {FormatSeconds(duration)}
             </div>
             <ProgressBar
-              max={duration}
+              max={duration || 0}
               value={currentTime}
               step={0.01}
               onChange={handleSeek}
