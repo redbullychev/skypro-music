@@ -69,3 +69,22 @@
     cursor: pointer;
     text-decoration: underline;
 }
+
+.counter {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 20px;
+    background-color: #ad61ff;
+    text-align: center;
+    padding: 3px;
+    top: -8px;
+    right: -7px;
+  }
+
+  .listActive {
+  border-color: #ad61ff;
+  color: #ad61ff;
+  cursor: pointer;
+  text-decoration: underline;
+}

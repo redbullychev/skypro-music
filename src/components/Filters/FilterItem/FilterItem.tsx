@@ -12,6 +12,9 @@ type FilterItemType = {
   isOpened: boolean;
   tracksData: trackType[];
   optionList?: string[];
+  selected?: string[] | string;
+  toggleSelected?: (item: string) => void;
+  counter?: number | null;
 };
 
 export default function FilterItem({
@@ -21,6 +24,8 @@ export default function FilterItem({
   isOpened,
   tracksData,
   optionList = [],
+  selected,
+  counter = 0,
 }: FilterItemType) {
   const dispatch = useAppDispatch();
   const getFilterList = () => {
@@ -50,6 +55,7 @@ export default function FilterItem({
   getFilterList();
   return (
     <div className={styles.wrapper}>
+      {counter !== 0 && <span className={styles.counter}>{counter}</span>}
       <div
         onClick={() => handleFilterClick(title)}
         className={classNames(styles.filterButton, styles.BtnText)}
@@ -58,15 +64,22 @@ export default function FilterItem({
       </div>
       {isOpened && (
         <ul className={styles.filterList}>
-          {getFilterList().map((item) => (
-            <li
-              onClick={() => toggleFilter(item)}
-              className={styles.filterItem}
-              key={item}
-            >
-              {item}
-            </li>
-          ))}
+          {getFilterList().map((item) => {
+            const activeClass = selected?.includes(item)
+              ? styles.listActive
+              : "";
+            return (
+              <li
+                onClick={() => {
+                  if (toggleFilter) toggleFilter(item);
+                }}
+                className={classNames(styles.filterItem, activeClass)}
+                key={item}
+              >
+                {item}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
