@@ -6,8 +6,6 @@ import styles from "./Filters.module.css";
 import { filters } from "./data";
 import { trackType } from "@/types";
 import { useAppSelector } from "@/hooks";
-import { useDispatch } from "react-redux";
-import { setFilters } from "@/store/features/playlistSlice";
 
 export default function Filters({ tracksData }: { tracksData: trackType[] }) {
   const selectedAuthors = useAppSelector(
