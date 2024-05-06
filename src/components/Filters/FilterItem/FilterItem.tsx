@@ -58,7 +58,7 @@ export default function FilterItem({
       {counter !== 0 && <span className={styles.counter}>{counter}</span>}
       <div
         onClick={() => handleFilterClick(title)}
-        className={classNames(styles.filterButton, styles.BtnText)}
+        className={!isOpened? classNames(styles.filterButton, styles.BtnText) : classNames(styles.filterButtonActive, styles.BtnTextActive)}
       >
         {title}
       </div>

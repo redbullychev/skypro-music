@@ -50,6 +50,7 @@ useEffect(() => {
         </div>
       </div>
       <div className={styles.contentPlaylist}>
+        {filteredTracks.length === 0 ? 'Нет треков, удовлетворяющих условия фильтра' : ''} 
         {filteredTracks.map((track) => (
           <Track key={track.id} track={track} tracksData={tracks} />
         ))}
