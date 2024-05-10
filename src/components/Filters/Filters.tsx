@@ -4,10 +4,9 @@ import { useCallback, useState } from "react";
 import FilterItem from "./FilterItem/FilterItem";
 import styles from "./Filters.module.css";
 import { filters } from "./data";
-import { trackType } from "@/types";
 import { useAppSelector } from "@/hooks";
 
-export default function Filters({ tracksData }: { tracksData: trackType[] }) {
+export default function Filters() {
   const selectedAuthors = useAppSelector(
     (store) => store.playlist.filterOptions.author
   );
@@ -34,7 +33,6 @@ export default function Filters({ tracksData }: { tracksData: trackType[] }) {
         handleFilterClick={handleFilterClick}
         title={filters[0].title}
         value={filters[0].value}
-        tracksData={tracksData}
         optionList={author}
         counter={selectedAuthors.length}
       />
@@ -44,7 +42,6 @@ export default function Filters({ tracksData }: { tracksData: trackType[] }) {
         handleFilterClick={handleFilterClick}
         title={filters[1].title}
         value={filters[1].value}
-        tracksData={tracksData}
         optionList={genre}
         counter={selectedGenres.length}
       />
@@ -53,7 +50,6 @@ export default function Filters({ tracksData }: { tracksData: trackType[] }) {
         handleFilterClick={handleFilterClick}
         title={filters[2].title}
         value={filters[2].value}
-        tracksData={tracksData}
         selected={selectedOrder}
       />
     </div>

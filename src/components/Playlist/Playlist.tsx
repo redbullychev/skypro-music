@@ -1,37 +1,16 @@
 'use client'
 
-import { getTracks } from "@/api/tracks";
 import Track from "../Track/Track";
 import styles from "./Playlist.module.css";
 import classNames from "classnames";
 import { trackType } from "@/types";
-import Filters from "../Filters/Filters";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { setInitialTracks } from "@/store/features/playlistSlice";
-import { useEffect, useState } from "react";
 
-export default function Playlist() {
 
-  const dispatch = useAppDispatch();
-  const [tracks, setTracks] = useState<trackType[]>([]);
-  const filteredTracks = useAppSelector((state) => state.playlist.filteredTracks)
+export default function Playlist({tracks, playlist, isLoading}:{tracks:trackType[], playlist:trackType[], isLoading?: boolean}) {
 
-  let tracksData: trackType[];
-
-useEffect(() => {
-    getTracks().then((tracksData) => {
-      setTracks(tracksData);
-      dispatch(setInitialTracks({initialTracks: tracksData}))
-    })
-    .catch((error: any) => {
-      throw new Error(error.message);
-    })
-  
-},[dispatch])
 
   return (
     <>
-    <Filters tracksData = {tracks} />
     <div className={styles.centerblockContent}>
       <div className={styles.contentTitle}>
         <div className={classNames(styles.playlistTitleCol, styles.col01)}>
@@ -50,9 +29,9 @@ useEffect(() => {
         </div>
       </div>
       <div className={styles.contentPlaylist}>
-        {filteredTracks.length === 0 ? 'Нет треков, удовлетворяющих условия фильтра' : ''} 
-        {filteredTracks.map((track) => (
-          <Track key={track.id} track={track} tracksData={tracks} />
+        {isLoading ? 'Загрузка...' : tracks?.length === 0 ? 'Нет треков, удовлетворяющих условиям фильтра' : ''} 
+        {tracks?.map((track) => (
+          <Track key={track.id} track={track} tracksData={playlist} />
         ))}
       </div>
     </div>
