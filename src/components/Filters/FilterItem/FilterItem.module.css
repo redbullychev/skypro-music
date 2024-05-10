@@ -15,6 +15,23 @@
     margin-right: 10px;
 }
 
+.filterButtonActive {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    border: 1px solid #ffffff;
+    border-radius: 60px;
+    padding: 6px 20px;
+    margin-right: 10px;
+}
+
+.BtnTextActive {
+    border-color: #ad61ff;
+    color: #ad61ff;
+    cursor: pointer;
+}
+
 .filterButton:not(:last-child) {
     margin-right: 10px;
 }
