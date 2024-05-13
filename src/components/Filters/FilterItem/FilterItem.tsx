@@ -10,7 +10,6 @@ type FilterItemType = {
   value: "author" | "genre" | "order";
   handleFilterClick: (newFilter: string) => void;
   isOpened: boolean;
-  tracksData: trackType[];
   optionList?: string[];
   selected?: string[] | string;
   toggleSelected?: (item: string) => void;
@@ -22,12 +21,12 @@ export default function FilterItem({
   title,
   value,
   isOpened,
-  tracksData,
   optionList = [],
   selected,
   counter = 0,
 }: FilterItemType) {
   const dispatch = useAppDispatch();
+  const tracksData = useAppSelector((state) => state.playlist.initialTracks)
   const getFilterList = () => {
     if (value !== "order") {
       const array = new Set(

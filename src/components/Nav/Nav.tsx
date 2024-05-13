@@ -10,6 +10,7 @@ export default function Nav() {
 
   return (
     <nav className={styles.mainNav}>
+      <Link href="/">
       <div className={styles.navLogo}>
         <Image
           src="/img/logo.png"
@@ -18,6 +19,7 @@ export default function Nav() {
           height={17}
         />
       </div>
+      </Link>
       <div
         onClick={() => setIsOpened((prev) => !prev)}
         className={styles.navBurger}
@@ -30,9 +32,9 @@ export default function Nav() {
         <div className={styles.navMenu}>
           <ul className={styles.menuList}>
             <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
+              <Link href="/" className={styles.menuLink}>
                 Главное
-              </a>
+              </Link>
             </li>
             <li className={styles.menuItem}>
               <a href="#" className={styles.menuLink}>
