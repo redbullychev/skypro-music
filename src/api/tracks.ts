@@ -20,6 +20,8 @@ export async function getPlaylistTracks(id: string) {
   const data = await res.json();
   return data.items;
 }
+
+
 //   // Обратите внимание, что функция компонента также является асинхронной
 //   export default async function HomePage() {
 //     const data = await getData();

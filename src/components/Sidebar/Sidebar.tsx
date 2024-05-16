@@ -1,20 +1,23 @@
+'use client'
+
 import Link from "next/link";
 import styles from "./Sidebar.module.css"
 import Image from "next/image";
+import { useUser } from "@/hooks/useUser";
 
 export default function Sidebar() {
+  const {user, logout} = useUser();
+
   return (
     <div className={styles.mainSidebar}>
-            <div className={styles.sidebarPersonal}>
-              <p className={styles.sidebarPersonalName}>Sergey.Ivanov</p>
-              <div className={styles.sidebarIcon}>
-                <Link href={"/signin"} >
+            {user?.email && (<div className={styles.sidebarPersonal}>
+              <p className={styles.sidebarPersonalName}>{user?.email}</p>
+              <div onClick={logout} className={styles.sidebarIcon}>
                 <svg>
                   <use xlinkHref="img/icon/sprite.svg#logout" />
                 </svg>
-                </Link>
               </div>
-            </div>
+            </div>)}
             <div className={styles.sidebarBlock}>
               <div className={styles.sidebarList}>
                 <div className={styles.sidebarItem}>

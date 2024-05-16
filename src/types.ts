@@ -1,11 +1,11 @@
-type userType = {
+export type userType = {
   id: number;
   username: string;
   first_name: string;
   last_name: string;
   email: string;
 };
-
+ 
 export type trackType = {
   id: number;
   name: string;
@@ -18,3 +18,4 @@ export type trackType = {
   track_file: string;
   stared_user: userType[];
 };
+
