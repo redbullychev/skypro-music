@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { trackType } from "@/types";
 
 
-export default function Playlist({tracks, playlist, isLoading}:{tracks:trackType[], playlist:trackType[], isLoading?: boolean}) {
+export default function Playlist({tracks, playlist, isLoading, isFavorite}:{tracks:trackType[], playlist:trackType[], isLoading?: boolean, isFavorite?:boolean}) {
 
 
   return (
@@ -31,7 +31,7 @@ export default function Playlist({tracks, playlist, isLoading}:{tracks:trackType
       <div className={styles.contentPlaylist}>
         {isLoading ? 'Загрузка...' : tracks?.length === 0 ? 'Нет треков, удовлетворяющих условиям фильтра' : ''} 
         {tracks?.map((track) => (
-          <Track key={track.id} track={track} tracksData={playlist} />
+          <Track key={track.id} track={track} tracksData={playlist} isFavorite={isFavorite} />
         ))}
       </div>
     </div>

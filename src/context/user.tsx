@@ -1,44 +1,40 @@
 'use client'
 
-import { userType } from "@/types";
+import { getValueFromLocalStorage } from "@/lib/getValueFromLS";
+import { tokenType, userType } from "@/types";
 import { useRouter } from "next/navigation";
 import { createContext, useState } from "react";
 
 type contextType = {
     user: null| userType,
-    login: (newUser: userType) => void,
+    login: (newUser: userType, token: tokenType) => void,
     logout: () => void,
 }
 
 const initialContextValue:contextType = {
   user: null,
-  login: (newUser: userType) => {},
+  login: (newUser, token) => {},
   logout: () => {},
 };
 
 
-function getUserFromLocalStorage() {
-  try {
-    return JSON.parse(localStorage.getItem("user") || "{}");
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
+
 
 export const UserConext = createContext(initialContextValue);
 export const UserProvider = ({ children }: any) => {
   const router = useRouter();
-  const [user, setUser] = useState<any>(getUserFromLocalStorage());
-  function login(newUser: userType) {
+  const [user, setUser] = useState<any>(getValueFromLocalStorage("user"));
+  function login(newUser: userType, token:tokenType) {
     setUser(newUser);
     localStorage.setItem("user", JSON.stringify(newUser));
+    localStorage.setItem("token", JSON.stringify(token));
     router.push("/tracks");
   }
 
   function logout() {
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
   }
 
   return (

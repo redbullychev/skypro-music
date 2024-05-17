@@ -1,3 +1,8 @@
+export type tokenType = {
+  refresh: string,
+  access: string
+}
+
 export type userType = {
   id: number;
   username: string;

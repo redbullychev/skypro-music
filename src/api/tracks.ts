@@ -1,3 +1,4 @@
+
 const apiUrl = "https://skypro-music-api.skyeng.tech/catalog/track/all/";
 const apiUrPlaylist = "https://skypro-music-api.skyeng.tech/catalog/selection/";
 
@@ -21,10 +22,79 @@ export async function getPlaylistTracks(id: string) {
   return data.items;
 }
 
+export async function getFavoritesTracks(token:string) {
+  const res = await fetch(
+    "https://skypro-music-api.skyeng.tech/catalog/track/favorite/all/",
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
+  if (!res.ok) {
+    throw new Error(res.status);
+  }
+  const data = await res.json();
+  return data;
+}
+
+export async function getToken({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const res = await fetch("https://skypro-music-api.skyeng.tech/user/token/", {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+    headers: {
+      // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+      "content-type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Ошибка при получении данных");
+  }
+  const data = await res.json();
+  return data;
+}
 //   // Обратите внимание, что функция компонента также является асинхронной
 //   export default async function HomePage() {
 //     const data = await getData();
 
 //     return <main>/* Некий контент */</main>;
 //   }
+
+export async function setLike(token: string, id:string) {
+  const res = await fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Ошибка при получении данных");
+  }
+  const data = await res.json();
+  return data;
+}
+
+export async function setDislike(token: string, id:string) {
+  const res = await fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Ошибка при получении данных");
+  }
+  const data = await res.json();
+  return data;
+}
