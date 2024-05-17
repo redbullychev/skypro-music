@@ -13,6 +13,10 @@ import {
   toggleShuffle,
 } from "@/store/features/playlistSlice";
 import { FormatSeconds } from "@/lib/FormatSeconds";
+import { useUser } from "@/hooks/useUser";
+import { setDislike, setLike } from "@/api/tracks";
+import { getValueFromLocalStorage } from "@/lib/getValueFromLS";
+import { trackType, userType } from "@/types";
 
 export default function Player() {
   const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
@@ -23,9 +27,17 @@ export default function Player() {
   const [isLooped, setIsLooped] = useState<boolean>(false);
   const { isShuffle } = useAppSelector((store) => store.playlist);
   const { isPlaying } = useAppSelector((store) => store.playlist);
+  const {user} = useUser();
+  const [isLiked, setIsLiked] = useState<any>()
+  const token = getValueFromLocalStorage("token");
 
   const duration = audioRef.current?.duration;
-  useEffect(() => {});
+  useEffect(() => {
+    setIsLiked(()=>{
+      const isLikedByUser = currentTrack?.stared_user.find((u) => u.id === user?.id);
+      setIsLiked(isLikedByUser);
+    })
+  },[currentTrack, user?.id]);
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -91,6 +103,11 @@ export default function Player() {
   const changeVolume = (e: any) => {
     setVolume(e.target.value);
   };
+
+  const handleLikeClick = () => {
+    isLiked ? setDislike(token.access, currentTrack?.id) : setLike(token.access, currentTrack?.id);
+    setIsLiked(!isLiked);
+  }
 
   
 
@@ -195,23 +212,14 @@ export default function Player() {
                   </div>
                   <div className={styles.trackPlayLikeDis}>
                     <div
+                      onClick={handleLikeClick}
                       className={classNames(
                         styles.trackPlayLike,
                         styles.BtnIcon
                       )}
                     >
                       <svg className={styles.trackPlayLikeSvg}>
-                        <use xlinkHref="/img/icon/sprite.svg#icon-like" />
-                      </svg>
-                    </div>
-                    <div
-                      className={classNames(
-                        styles.trackPlayDislike,
-                        styles.BtnIcon
-                      )}
-                    >
-                      <svg className={styles.trackPlayDislikeSvg}>
-                        <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
+                        <use xlinkHref={`/img/icon/sprite.svg#${isLiked ? "icon-dislike": "icon-like"}`} />
                       </svg>
                     </div>
                   </div>

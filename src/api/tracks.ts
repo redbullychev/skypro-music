@@ -1,3 +1,4 @@
+import { trackType, userType } from "@/types";
 
 const apiUrl = "https://skypro-music-api.skyeng.tech/catalog/track/all/";
 const apiUrPlaylist = "https://skypro-music-api.skyeng.tech/catalog/selection/";
@@ -71,7 +72,7 @@ export async function getToken({
 //     return <main>/* Некий контент */</main>;
 //   }
 
-export async function setLike(token: string, id:string) {
+export async function setLike(token: string, id:number) {
   const res = await fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
     method: "POST",
     headers: {
@@ -85,7 +86,7 @@ export async function setLike(token: string, id:string) {
   return data;
 }
 
-export async function setDislike(token: string, id:string) {
+export async function setDislike(token: string, id:number) {
   const res = await fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
     method: "DELETE",
     headers: {

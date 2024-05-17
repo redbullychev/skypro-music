@@ -31,7 +31,7 @@ export default function MainTracksPage() {
   return (
     <>
       <Filters />
-      <Playlist isLoading = {isLoading} tracks={filteredTracks} playlist={tracks} />
+      <Playlist isLoading = {isLoading} tracks={filteredTracks} playlist={tracks}  />
     </>
   );
 }

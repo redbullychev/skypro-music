@@ -8,6 +8,6 @@ type CategoryType = {
 export default async function CategoryPage({params}:CategoryType) {
     const tracksData = await getPlaylistTracks(params.id);
     return (<>
-    <Playlist tracks={tracksData} playlist={tracksData}/>
+    <Playlist tracks={tracksData} playlist={tracksData} />
     </>)
 } 
