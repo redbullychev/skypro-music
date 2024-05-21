@@ -7,6 +7,7 @@ import ProgressBar from "../ProgressBar/ProgressBar";
 import VolumeBar from "../VolumeBar/VolumeBar";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
+  setInitialTracks,
   setNextTrack,
   setPrevtrack,
   toggleIsPlaying,
@@ -14,9 +15,8 @@ import {
 } from "@/store/features/playlistSlice";
 import { FormatSeconds } from "@/lib/FormatSeconds";
 import { useUser } from "@/hooks/useUser";
-import { setDislike, setLike } from "@/api/tracks";
+import { getTracks, setDislike, setLike } from "@/api/tracks";
 import { getValueFromLocalStorage } from "@/lib/getValueFromLS";
-import { trackType, userType } from "@/types";
 
 export default function Player() {
   const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
@@ -27,17 +27,19 @@ export default function Player() {
   const [isLooped, setIsLooped] = useState<boolean>(false);
   const { isShuffle } = useAppSelector((store) => store.playlist);
   const { isPlaying } = useAppSelector((store) => store.playlist);
-  const {user} = useUser();
-  const [isLiked, setIsLiked] = useState<any>()
+  const { user } = useUser();
+  const [isLiked, setIsLiked] = useState<any>();
   const token = getValueFromLocalStorage("token");
 
   const duration = audioRef.current?.duration;
   useEffect(() => {
-    setIsLiked(()=>{
-      const isLikedByUser = currentTrack?.stared_user.find((u) => u.id === user?.id);
+    setIsLiked(() => {
+      const isLikedByUser =
+        currentTrack?.isFavorite ||
+        currentTrack?.stared_user.find((u) => u.id === user?.id);
       setIsLiked(isLikedByUser);
-    })
-  },[currentTrack, user?.id]);
+    });
+  }, [currentTrack, user?.id]);
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -92,7 +94,7 @@ export default function Player() {
       setCurrentTime(Number(event.target.value));
       audioRef.current.currentTime = Number(event.target.value);
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -105,11 +107,21 @@ export default function Player() {
   };
 
   const handleLikeClick = () => {
-    isLiked ? setDislike(token.access, currentTrack?.id) : setLike(token.access, currentTrack?.id);
-    setIsLiked(!isLiked);
-  }
-
-  
+    if (currentTrack) {
+      isLiked
+        ? setDislike(token.access, currentTrack?.id).then(() => {
+            getTracks(). then((data) => {
+              dispatch(setInitialTracks({ initialTracks: data }));
+            });
+          })
+        : setLike(token.access, currentTrack?.id).then(() => {
+          getTracks(). then((data) => {
+            dispatch(setInitialTracks({ initialTracks: data }));
+          });
+        });
+      setIsLiked(!isLiked);
+    }
+  };
 
   return (
     <>
@@ -219,7 +231,11 @@ export default function Player() {
                       )}
                     >
                       <svg className={styles.trackPlayLikeSvg}>
-                        <use xlinkHref={`/img/icon/sprite.svg#${isLiked ? "icon-dislike": "icon-like"}`} />
+                        <use
+                          xlinkHref={`/img/icon/sprite.svg#${
+                            isLiked ? "icon-dislike" : "icon-like"
+                          }`}
+                        />
                       </svg>
                     </div>
                   </div>

@@ -1,4 +1,5 @@
 import { trackType, userType } from "@/types";
+import { json } from "stream/consumers";
 
 const apiUrl = "https://skypro-music-api.skyeng.tech/catalog/track/all/";
 const apiUrPlaylist = "https://skypro-music-api.skyeng.tech/catalog/selection/";
@@ -14,7 +15,7 @@ export async function getTracks() {
 }
 
 export async function getPlaylistTracks(id: string) {
-  const res = await fetch(apiUrPlaylist + id);
+  const res = await fetch(apiUrPlaylist + id, {next:{revalidate:1}});
 
   if (!res.ok) {
     throw new Error("Ошибка при получении данных");
@@ -35,7 +36,7 @@ export async function getFavoritesTracks(token:string) {
   );
 
   if (!res.ok) {
-    throw new Error(res.status);
+    throw new Error(JSON.stringify(res.status));
   }
   const data = await res.json();
   return data;
