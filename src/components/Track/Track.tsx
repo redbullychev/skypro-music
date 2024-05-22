@@ -27,7 +27,6 @@ export default function Track({ track, tracksData, isFavorite }: TrackType) {
   const { isPlaying } = useAppSelector((store) => store.playlist);
   const { user } = useUser();
   const token = getValueFromLocalStorage("token");
-  console.log(user?.id, track.stared_user.find((u) => u.id === user?.id));
   const isLikedByUser =
     isFavorite || track.stared_user.find((u) => u.id === user?.id);
   const dispatch = useAppDispatch();
