@@ -4,9 +4,11 @@ import Link from "next/link";
 import styles from "./Nav.module.css";
 import Image from "next/image";
 import { useState } from "react";
+import { useUser } from "@/hooks/useUser";
 
 export default function Nav() {
   const [isOpened, setIsOpened] = useState<boolean>(false);
+  const {user, logout} = useUser();
 
   return (
     <nav className={styles.mainNav}>
@@ -36,16 +38,16 @@ export default function Nav() {
                 Главное
               </Link>
             </li>
-            <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
+            {user?.email && <li className={styles.menuItem}>
+              <Link href="/tracks/favorites" className={styles.menuLink}>
                 Мой плейлист
-              </a>
-            </li>
-            <li className={styles.menuItem}>
+              </Link>
+            </li>}
+            {!user?.email ?<li className={styles.menuItem}>
               <Link href="/signin" className={styles.menuLink}>
                 Войти
               </Link>
-            </li>
+            </li> : <li className={styles.menuItem} onClick={logout}>Выйти</li>}
           </ul>
         </div>
       )}

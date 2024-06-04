@@ -7,12 +7,16 @@ import ProgressBar from "../ProgressBar/ProgressBar";
 import VolumeBar from "../VolumeBar/VolumeBar";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
+  setInitialTracks,
   setNextTrack,
   setPrevtrack,
   toggleIsPlaying,
   toggleShuffle,
 } from "@/store/features/playlistSlice";
 import { FormatSeconds } from "@/lib/FormatSeconds";
+import { useUser } from "@/hooks/useUser";
+import { getTracks, setDislike, setLike } from "@/api/tracks";
+import { getValueFromLocalStorage } from "@/lib/getValueFromLS";
 
 export default function Player() {
   const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
@@ -23,9 +27,19 @@ export default function Player() {
   const [isLooped, setIsLooped] = useState<boolean>(false);
   const { isShuffle } = useAppSelector((store) => store.playlist);
   const { isPlaying } = useAppSelector((store) => store.playlist);
+  const { user } = useUser();
+  const [isLiked, setIsLiked] = useState<any>();
+  const token = getValueFromLocalStorage("token");
 
   const duration = audioRef.current?.duration;
-  useEffect(() => {});
+  useEffect(() => {
+    setIsLiked(() => {
+      const isLikedByUser =
+        currentTrack?.isFavorite ||
+        currentTrack?.stared_user.find((u) => u.id === user?.id);
+      setIsLiked(isLikedByUser);
+    });
+  }, [currentTrack, user?.id]);
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -80,7 +94,7 @@ export default function Player() {
       setCurrentTime(Number(event.target.value));
       audioRef.current.currentTime = Number(event.target.value);
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -92,7 +106,22 @@ export default function Player() {
     setVolume(e.target.value);
   };
 
-  
+  const handleLikeClick = () => {
+    if (currentTrack) {
+      isLiked
+        ? setDislike(token.access, currentTrack?.id).then(() => {
+            getTracks(). then((data) => {
+              dispatch(setInitialTracks({ initialTracks: data }));
+            });
+          })
+        : setLike(token.access, currentTrack?.id).then(() => {
+          getTracks(). then((data) => {
+            dispatch(setInitialTracks({ initialTracks: data }));
+          });
+        });
+      setIsLiked(!isLiked);
+    }
+  };
 
   return (
     <>
@@ -195,23 +224,18 @@ export default function Player() {
                   </div>
                   <div className={styles.trackPlayLikeDis}>
                     <div
+                      onClick={handleLikeClick}
                       className={classNames(
                         styles.trackPlayLike,
                         styles.BtnIcon
                       )}
                     >
                       <svg className={styles.trackPlayLikeSvg}>
-                        <use xlinkHref="/img/icon/sprite.svg#icon-like" />
-                      </svg>
-                    </div>
-                    <div
-                      className={classNames(
-                        styles.trackPlayDislike,
-                        styles.BtnIcon
-                      )}
-                    >
-                      <svg className={styles.trackPlayDislikeSvg}>
-                        <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
+                        <use
+                          xlinkHref={`/img/icon/sprite.svg#${
+                            isLiked ? "icon-dislike" : "icon-like"
+                          }`}
+                        />
                       </svg>
                     </div>
                   </div>
